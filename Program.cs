@@ -6,7 +6,7 @@ int hibasSorokSzama = 0;
 
 try
 {
-    string[] sorok = File.ReadAllLines("mutargyak.cs").Skip(1).ToArray();
+    string[] sorok = File.ReadAllLines("mutargyak.txt").Skip(1).ToArray();
 
     foreach (string sor in sorok)
     {
@@ -86,7 +86,7 @@ if (legertekesebb != null)
 
 Console.WriteLine($"Milliós értéket meghaladó műtárgyak: {mutargyak.Count(m => m.BecsultErtek > 1_000_000)} db");
 
-Console.WriteLine("Festmények külön elemzése:");
+Console.WriteLine("\nFestmények külön elemzése:");
 mutargyak.ForEach((m) =>
 {
     if (m is Festmeny f)
@@ -95,17 +95,23 @@ mutargyak.ForEach((m) =>
     }
 });
 
-Console.WriteLine("A riport.txt fájl sikeresen elkészült a kimeneti mappában.");
+
+try
+{
+    List<Mutargy> rendezett = mutargyak.OrderByDescending(m => m.BecsultErtek).ToList();
+
+    string[] formazottSorok = rendezett.Select((Mutargy m, int i) =>
+    {
+        return $"{m.Azonosito};{m.BecsultErtek};{m.BiztositasDij()}";
+    }).ToArray();
+
+    File.WriteAllLines("riport.txt", formazottSorok);
+
+    Console.WriteLine("\nA riport.txt fájl sikeresen elkészült a kimeneti mappában.");
+
+} catch (Exception exc)
+{
+    Console.WriteLine(exc);
+}
+
 Console.WriteLine($"Műtárgy példányok száma (static): {Mutargy.OsszesMutargySzama} db");
-
-//try
-//{
-//    List<Mutargy> rendezett = (List<Mutargy>)mutargyak.OrderByDescending(m => m.BecsultErtek);
-
-//    string[] sorok = rendezett.Select((m) =>
-//    {
-
-//    });
-
-//    File.WriteAllLines("riport.txt", sorok);
-//}

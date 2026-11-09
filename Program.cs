@@ -1,6 +1,6 @@
 ﻿using MuzeumApp;
 
-List<Mutargy> mutargyak = new List<Mutargy>();
+List<Mutargy> mutargyak = [];
 
 int hibasSorokSzama = 0;
 
@@ -38,15 +38,13 @@ try
             continue;
         }
 
-        int becsultErtek = 0;
-        if (!int.TryParse(adatok[2], out becsultErtek))
+        if (!int.TryParse(adatok[2], out int becsultErtek))
         {
             hibasSorokSzama++;
             continue;
         }
 
-        int extra = 0;
-        if (!int.TryParse(adatok[3], out extra))
+        if (!int.TryParse(adatok[3], out int extra))
         {
             hibasSorokSzama++;
             continue;
@@ -95,12 +93,8 @@ mutargyak.ForEach((m) =>
     }
 });
 
-
-try
-{
-    List<Mutargy> rendezett = mutargyak.OrderByDescending(m => m.BecsultErtek).ToList();
-
-    string[] formazottSorok = rendezett.Select((Mutargy m, int i) =>
+try { 
+    string[] formazottSorok = mutargyak.OrderByDescending(m => m.BecsultErtek).Select((Mutargy m) =>
     {
         return $"{m.Azonosito};{m.BecsultErtek};{m.BiztositasDij()}";
     }).ToArray();
@@ -109,7 +103,8 @@ try
 
     Console.WriteLine("\nA riport.txt fájl sikeresen elkészült a kimeneti mappában.");
 
-} catch (Exception exc)
+} 
+catch (Exception exc)
 {
     Console.WriteLine(exc);
 }
